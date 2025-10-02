@@ -1,0 +1,7 @@
+## Module controller map
+---
+polls/list: polllist
+polls/add: polladd
+polls/edit: polledit
+ajax/polls/votelog: votelog
+ajax/polls/ajaxpublic: ajaxPublic

@@ -1,0 +1,46 @@
+## Module controller map
+---
+descriptions:
+    top:
+        headline: GLOBAL_INFO
+        text: >
+            Um die Anzeige anzupassen, erstelle im FanPress CM-Unterordner
+            <em>/data/nkorg_polls/templates</em> eine Kopie der jeweiligen
+            Datei mit der Endung <em>.custom.html</em>.
+            <dl>
+                <dt>voteform_header.html</dt>
+                <dd class="mb-1">Kopfzeile einer Umfrage im Votingformular</dd>
+                <dt>voteform_line.html</dt>
+                <dd class="mb-1">Zeile einer Antwort im Votingformular</dd>
+                <dt>voteform_footer.html</dt>
+                <dd class="mb-1">Fußzeile im Votingformular</dd>
+                <dt>result_header.html</dt>
+                <dd class="mb-1">Kopfzeile einer Umfrage im Ergebnisformular</dd>
+                <dt>result_line.html</dt>
+                <dd class="mb-1">Zeile einer Antwort im Ergebnisformular</dd>
+                <dt>result_footer.html</dt>
+                <dd class="mb-1">Fußzeile im Ergebnisformular</dd>
+                <dt>archive_footer.html</dt>
+                <dd class="mb-1">Fußzeile im Archiv</dd>
+            </dl>
+show_latest_poll:
+    type: boolSelect
+    conf:
+        text: GUI_CONFIG_SHOWLATEST
+        icon: sort-alpha-down-alt
+        size: lg
+chart_type:
+    type: boolSelect
+    conf:
+        options: $charTypes
+        text: GUI_CONFIG_CHARTTYPE
+        icon: chart-pie
+        size: lg
+vote_expiration_default:
+    type: textInput
+    conf:
+        text: GUI_POLL_COOKIE_DEFAULT
+        wrapper: false
+        type: number
+        icon: stopwatch
+        size: lg

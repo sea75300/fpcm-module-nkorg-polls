@@ -1,0 +1,47 @@
+## counts_visits table definition
+---
+name: polls_replies
+primarykey: id
+engine: InnoDB
+charset: utf8
+autoincrement:
+    colname: id
+    start: 1
+cols:
+    id:
+        type: bigint
+        length: 20
+        params: NOT NULL
+    pollid:
+        type: bigint
+        length: 20
+        params: NOT NULL
+    text:
+        type: varchar
+        length: 255
+        params: NOT NULL
+    votes:
+        type: bigint
+        length: 20
+        params: NOT NULL
+    color:
+        type: varchar
+        length: 64
+        params: NOT NULL
+    createtime:
+        type: bigint
+        length: 20
+        params: NOT NULL
+    createuser:
+        type: bigint
+        length: 20
+        params: NOT NULL
+indices:
+    pollid:
+        col: pollid
+        isUnqiue: false
+    votes:
+        col: votes
+        isUnqiue: false
+defaultvalues:
+    rows:

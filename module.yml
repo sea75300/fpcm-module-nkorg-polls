@@ -1,0 +1,20 @@
+## Module config file
+---
+key: nkorg/polls
+author: imagine
+name: Polls
+description: "Module to create polls with single/ multiple answers and so on."
+link: https://nobody-knows.org/
+version: 5.1.3-b1
+help: 
+useDataFolder: true
+requirements:
+    system: 5.2.0-a1
+    php: 8.0.0
+tables:
+configOptions:
+    show_latest_poll: 0
+    vote_expiration_default: 2678400
+    chart_type: pie
+crons:
+    anonymizeVotelog: 2419200
