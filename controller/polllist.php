@@ -60,7 +60,7 @@ final class polllist extends \fpcm\controller\abstracts\module\controller {
         $this->view->addTabs('polls', [
             (new \fpcm\view\helper\tabItem('main'))
                 ->setText($this->addLangVarPrefix('HEADLINE'))
-                ->setFile( \fpcm\view\view::PATH_COMPONENTS . 'dataview__inline' )
+                ->setFile( \fpcm\view\view::PATH_COMPONENTS . 'dataview_inline' )
         ]);
 
         $this->view->setFormAction('polls/list');

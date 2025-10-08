@@ -8,7 +8,7 @@ final class apiCallFunction extends \fpcm\module\event {
 
     private $jsVars = [];
 
-    public function run()
+    public function run() : \fpcm\module\eventResult
     {
         $fn = $this->data['name'];
         if (!method_exists($this, $fn)) {

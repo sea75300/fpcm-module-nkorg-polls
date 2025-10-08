@@ -4,7 +4,7 @@ namespace fpcm\modules\nkorg\polls\events\modules;
 
 final class configure extends \fpcm\module\event {
 
-    public function run()
+    public function run() : \fpcm\module\eventResult
     {
         $this->data = [
             'charTypes' => [
@@ -14,7 +14,7 @@ final class configure extends \fpcm\module\event {
             ]
         ];
 
-        return $this->data;
+        return (new \fpcm\module\eventResult())->setData($this->data);
     }
 
     public function init()
