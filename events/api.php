@@ -4,27 +4,9 @@ namespace fpcm\modules\nkorg\polls\events;
 
 use fpcm\classes\loader;
 
-final class apiCallFunction extends \fpcm\module\event {
+final class api extends \fpcm\module\api {
 
     private $jsVars = [];
-
-    public function run() : \fpcm\module\eventResult
-    {
-        $fn = $this->data['name'];
-        if (!method_exists($this, $fn)) {
-            trigger_error('Function '.$fn.' does not exists!');
-            return false;
-        }
-
-        $pollId = $this->data['args'][0] ?? 0;
-        call_user_func([$this, $fn], $pollId);
-        return true;
-    }
-
-    public function init()
-    {
-        return true;
-    }
     
     private function getViewObj()
     {
@@ -68,7 +50,7 @@ final class apiCallFunction extends \fpcm\module\event {
         return true;
     }
 
-    final protected function displayArchive(array $params = [])
+    final public function displayArchive(array $params = [])
     {
         $params['sort'] = $params['sort'] ?? ['starttime DESC'];
 
