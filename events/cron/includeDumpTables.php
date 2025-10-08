@@ -11,7 +11,7 @@ final class includeDumpTables extends \fpcm\module\event {
         $this->data[] = $db->getTablePrefixed('module_nkorgpolls_polls');
         $this->data[] = $db->getTablePrefixed('module_nkorgpolls_polls_replies');
         $this->data[] = $db->getTablePrefixed('module_nkorgpolls_vote_log');
-        
+
         return (new \fpcm\module\eventResult())->setData($this->data);
     }
 
