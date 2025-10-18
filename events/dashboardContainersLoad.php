@@ -6,7 +6,7 @@ final class dashboardContainersLoad extends \fpcm\module\event {
 
     public function run() : \fpcm\module\eventResult
     {
-        $this->data[] = '\fpcm\modules\nkorg\polls\models\dashContainerRecentPoll';
+        $this->data->addContainer('models\dashContainerRecentPoll');
         return (new \fpcm\module\eventResult())->setData($this->data);
     }
 
