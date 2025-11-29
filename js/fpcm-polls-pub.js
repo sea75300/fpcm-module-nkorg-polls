@@ -9,116 +9,154 @@ fpcm.modules.pollspub = {
 
     _initVote: function () {
 
-        jQuery('button.fpcm-polls-poll-submit').unbind('click');
-        jQuery('button.fpcm-polls-poll-reset').unbind('click');
+        fpcm.system.bindClick(
+            'button.fpcm-polls-poll-submit',
+            (_ev) => {
+                var _data = {
+                    rids: [],
+                    pid: 0,
+                    fn: 'vote'
+                };
 
-        jQuery('button.fpcm-polls-poll-submit').click(function () {
+                _data.pid = fpcm.modules.pollspub._getPidByElement(_ev.currentTarget);
+                if (!_data.pid) {
+                    return false;
+                }
 
-            var data = {
-                rids: [],
-                pid: 0,
-                fn: 'vote'
-            };
+                let _selects = fpcm.modules.pollspub._getSelects(_data.pid);
+                if (!_selects) {
+                    return false;
+                }
 
-            data.pid = jQuery(this).data('pollid');
-            if (!data.pid) {
+                for (var _i = 0; _i < _selects.length; _i++) {
+                    _data.rids.push(parseInt(_selects[_i].value));
+                }
+
+                if (!_data.rids.length) {
+                    return false;
+                }
+
+                fpcm.modules.pollspub._displayLoader(_data.pid);
+                fpcm.modules.pollspub._execAjax({
+                    method: 'post',
+                    action: 'ajaxpublic',
+                    data: _data
+                });
+
                 return false;
             }
+        );
 
+        fpcm.system.bindClick(
+            'button.fpcm-polls-poll-reset',
+            (_ev) => {
 
-            jQuery('input.fpcm-polls-poll' + data.pid + '-option:checked').each(function (key, obj) {
-                data.rids.push(parseInt(obj.value));
-            });
+                var pid = fpcm.modules.pollspub._getPidByElement(_ev.currentTarget);
+                if (!pid) {
+                    return false;
+                }
 
-            if (!data.rids.length) {
+                let _selects = fpcm.modules.pollspub._getSelects(_data.pid);
+                for (var _i = 0; _i < _selects.length; _i++) {
+                    _selects[_i].checked = false;
+                }
+
                 return false;
             }
-
-            fpcm.modules.pollspub._displayLoader(data.pid);
-            fpcm.modules.pollspub._execAjax({
-                method: 'post',
-                action: 'ajaxpublic',
-                data: data
-            });
-
-            return false;
-        });
-
-        jQuery('button.fpcm-polls-poll-reset').click(function () {
-
-            var pid = jQuery(this).data('pollid');
-            if (!pid) {
-                return false;
-            }
-
-            jQuery('input.fpcm-polls-poll' + pid + '-option:checked').prop('checked', false);
-            return false;
-        });
+        );
 
     },
 
     _initButtons: function () {
 
-        jQuery('button.fpcm-polls-poll-result').unbind('click');
-        jQuery('button.fpcm-polls-poll-form').unbind('click');
+        fpcm.system.bindClick(
+            'button.fpcm-polls-poll-result',
+            (_ev) => {
+                var data = {
+                    pid: 0,
+                    fn: 'result'
+                };
 
-        jQuery('button.fpcm-polls-poll-result').click(function () {
+                data.pid = fpcm.modules.pollspub._getPidByElement(_ev.currentTarget);
+                if (!data.pid) {
+                    return false;
+                }
 
-            var data = {
-                pid: 0,
-                fn: 'result'
-            };
+                fpcm.modules.pollspub._displayLoader(data.pid);
+                fpcm.modules.pollspub._execAjax({
+                    method: 'post',
+                    action: 'ajaxpublic',
+                    okCode: 300,
+                    data: data,
+                    onDone: function () {
+                        fpcm.modules.pollspub._initButtons();
+                    }
+                });
 
-            data.pid = jQuery(this).data('pollid');
-            if (!data.pid) {
                 return false;
             }
+        );
 
-            fpcm.modules.pollspub._displayLoader(data.pid);
-            fpcm.modules.pollspub._execAjax({
-                method: 'post',
-                action: 'ajaxpublic',
-                okCode: 300,
-                data: data,
-                onDone: function () {
-                    fpcm.modules.pollspub._initButtons();
+        fpcm.system.bindClick(
+            'button.fpcm-polls-poll-form',
+            (_ev) => {
+
+                var data = {
+                    pid: 0,
+                    fn: 'pollForm'
+                };
+
+                data.pid = fpcm.modules.pollspub._getPidByElement(_ev.currentTarget);
+                if (!data.pid) {
+                    return false;
                 }
-            });
 
-            return false;
-        });
+                fpcm.modules.pollspub._displayLoader(data.pid);
+                fpcm.modules.pollspub._execAjax({
+                    method: 'post',
+                    action: 'ajaxpublic',
+                    okCode: 400,
+                    data: data,
+                    onDone: function () {
+                        fpcm.modules.pollspub._initButtons();
+                        fpcm.modules.pollspub._initVote();
+                    }
+                });
 
-        jQuery('button.fpcm-polls-poll-form').click(function () {
-
-            var data = {
-                pid: 0,
-                fn: 'pollForm'
-            };
-
-            data.pid = jQuery(this).data('pollid');
-            if (!data.pid) {
                 return false;
             }
-
-            fpcm.modules.pollspub._displayLoader(data.pid);
-            fpcm.modules.pollspub._execAjax({
-                method: 'post',
-                action: 'ajaxpublic',
-                okCode: 400,
-                data: data,
-                onDone: function () {
-                    fpcm.modules.pollspub._initButtons();
-                    fpcm.modules.pollspub._initVote();
-                }
-            });
-
-            return false;
-        });
+        );
 
     },
 
-    _displayLoader: function (pid) {
-        jQuery('#fpcm-poll-poll' + pid).html('<div style="position:relative:left:0;right:0;top:0;bottom:0;text-align:center;"><img src="' + fpcm.modules.pollspub.vars.spinner + '"></div>');
+    _getSelects: function(_pid) {
+
+        let _selects = document.querySelectorAll('input.fpcm-polls-poll' + _pid + '-option:checked');
+        if (!_selects) {
+            return [];
+        }
+
+        return _selects;
+    },
+
+    _getPidByElement: function(_el) {
+
+        if (_el.dataset.pollid === undefined) {
+            return 0;
+        }
+
+        return _el.dataset.pollid;
+    },
+
+    _assignToPidArea: function(_pid, _code) {
+        document.getElementById(`fpcm-poll-poll${_pid}`).innerHTML =_code;
+    },
+
+    _displayLoader: function (_pid) {
+        fpcm.modules.pollspub._assignToPidArea(
+            _pid,
+            '<div style="position:relative:left:0;right:0;top:0;bottom:0;text-align:center;"><img src="' + fpcm.modules.pollspub.vars.spinner + '"></div>'
+        );
     },
 
     _displayMsg: function (msgData) {
@@ -136,7 +174,7 @@ fpcm.modules.pollspub = {
     },
 
     _execAjax: function (_params) {
-        
+
         if (!fpcm.pub) {
             alert('Missing FanPress CM base module "fpcm.pub". Check you you have loaded fanpress/js/fpcm.min.js or fanpress/js/fpcm.js!');
             return true;
@@ -144,15 +182,6 @@ fpcm.modules.pollspub = {
 
         _params.ajaxActionPath = fpcm.modules.pollspub.vars.actionPath;
 
-        _params.onCode = {
-            500: function () {
-                alert('Während der Anfrage ist ein Fehler aufgetreten!');
-            },
-            404: function () {
-                alert('Das Zeil der Anfrage wurde nicht gefunden!');
-            }            
-        };
-        
         _params.execDone = function (result) {
 
             if (!result instanceof Object && result.search('FATAL ERROR:') === 3) {
@@ -167,7 +196,10 @@ fpcm.modules.pollspub = {
             }
 
             if (result.html !== undefined) {
-                jQuery('#fpcm-poll-poll' + _params.data.pid).html(result.html);
+                fpcm.modules.pollspub._assignToPidArea(
+                    _params.data.pid,
+                    result.html
+                );
             }
 
             if (!_params.onDone) {
@@ -175,7 +207,7 @@ fpcm.modules.pollspub = {
             }
 
             _params.onDone(result);
-        }; 
+        };
 
         fpcm.pub.doAjax(_params);
     }
